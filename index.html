@@ -1,0 +1,77 @@
+<!--simple web application. It will be able to search players and list them among their predictions so you can play a bit with the results of this experiment. -->
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src='angular.min.js'></script>
+    <script src='fifa20players.js'></script>
+    <script>
+        angular.module('Fifa20App', [])
+            .controller('Fifa20Controller', function ($scope) {
+                vm = this;
+                vm.players = players;
+                vm.tempSearchText = "Suárez";
+                vm.searchText = "Suárez";
+
+                vm.search = function () {
+                    vm.searchText = vm.tempSearchText;
+                }
+
+                vm.keypress = function (keyEvent) {
+                    if (keyEvent.which === 13)
+                        vm.search();
+                }
+
+            });
+    </script>
+</head>
+<body>
+<div class="container" ng-app='Fifa20App'>
+    <br>
+    <br>
+    <br>
+    <div ng-controller='Fifa20Controller as ctrl'>
+
+        <!-- Players filter -->
+        <div class="row" style="padding-bottom: 25px;">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="ctrl.tempSearchText" placeholder="Search"
+                       ng-keypress="ctrl.keypress($event)">
+                <span class="input-group-btn">
+				<button class="btn btn-secondary" type="button" ng-click="ctrl.search()">Go!</button>
+			      </span>
+            </div>
+        </div>
+
+        <!-- Players Table -->
+        <div style="height: 500px;">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Finishing</th>
+                    <th>Value (€)</th>
+                    <th>Overall</th>
+                    <th>Overall Prediction</th>
+                    <th>% Error</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="p in ctrl.players | filter:{ short_name: ctrl.searchText } | orderBy:'short_name'">
+                    <td>{{p.short_name}}</td>
+                    <td>{{p.age}}</td>
+                    <td>{{p.attacking_finishing}}</td>
+                    <td>{{p.value_eur}}</td>
+                    <td>{{p.overall}}</td>
+                    <td>{{p.Overall_Prediction_RBF}}</td>
+                    <td>{{p.Error_Percentage}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
